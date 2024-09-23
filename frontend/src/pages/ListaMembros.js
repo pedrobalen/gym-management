@@ -3,37 +3,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const formatarData = (data) => {
+  if (!data) return "Data inválida";
   const dataObj = new Date(data);
+  if (isNaN(dataObj.getTime())) return "Data inválida";
+
   const dia = String(dataObj.getDate()).padStart(2, "0");
   const mes = String(dataObj.getMonth() + 1).padStart(2, "0");
   const ano = String(dataObj.getFullYear()).slice(-2);
   return `${dia}/${mes}/${ano}`;
-};
-
-const calcularDataTermino = (dataRegistro, tipoPlano) => {
-  const dataInicio = new Date(dataRegistro);
-  let dataTermino;
-
-  switch (tipoPlano.toLowerCase()) {
-    case "mensal":
-      dataTermino = new Date(dataInicio.setMonth(dataInicio.getMonth() + 1));
-      break;
-    case "3 meses":
-      dataTermino = new Date(dataInicio.setMonth(dataInicio.getMonth() + 3));
-      break;
-    case "semestral":
-      dataTermino = new Date(dataInicio.setMonth(dataInicio.getMonth() + 6));
-      break;
-    case "anual":
-      dataTermino = new Date(
-        dataInicio.setFullYear(dataInicio.getFullYear() + 1)
-      );
-      break;
-    default:
-      return "Plano desconhecido";
-  }
-
-  return dataTermino;
 };
 
 const ListaMembros = () => {
@@ -80,6 +57,12 @@ const ListaMembros = () => {
         alert("Por favor, preencha todos os campos obrigatórios.");
         return;
       }
+      console.log(
+        "Dados que serão enviados:",
+        JSON.stringify(novoMembro, null, 2)
+      );
+
+      console.log("Dados do novo membro:", novoMembro);
 
       const response = await axios.post(
         "http://localhost:4000/membros",
@@ -96,7 +79,10 @@ const ListaMembros = () => {
         plano_treino: { categorias: [] },
       });
     } catch (error) {
-      console.error("Erro ao adicionar membro:", error);
+      console.error(
+        "Erro ao adicionar membro:",
+        error.response ? error.response.data : error.message
+      );
       alert("Erro ao adicionar membro. Verifique os dados e tente novamente.");
     }
   };
@@ -152,9 +138,8 @@ const ListaMembros = () => {
           onChange={handleNovoMembroChange}
         >
           <option value="mensal">Mensal</option>
-          <option value="3 meses">3 Meses</option>
+          <option value="trimestral">Trimestral</option>
           <option value="semestral">Semestral</option>
-          <option value="anual">Anual</option>
         </select>
 
         <button onClick={handleAdicionarMembro}>Adicionar Membro</button>
@@ -195,11 +180,7 @@ const ListaMembros = () => {
                 <td>{membro.restricoes}</td>
                 <td>{membro.tipo_plano}</td>
                 <td>{formatarData(membro.data_registro)}</td>
-                <td>
-                  {formatarData(
-                    calcularDataTermino(membro.data_registro, membro.tipo_plano)
-                  )}
-                </td>
+                <td>{formatarData(membro.data_final)}</td>
               </tr>
             ))
           ) : (

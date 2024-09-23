@@ -10,32 +10,6 @@ const formatarData = (data) => {
   return `${dia}/${mes}/${ano}`;
 };
 
-const calcularDataTermino = (dataRegistro, tipoPlano) => {
-  const dataInicio = new Date(dataRegistro);
-  let dataTermino;
-
-  switch (tipoPlano.toLowerCase()) {
-    case "mensal":
-      dataTermino = new Date(dataInicio.setMonth(dataInicio.getMonth() + 1));
-      break;
-    case "3 meses":
-      dataTermino = new Date(dataInicio.setMonth(dataInicio.getMonth() + 3));
-      break;
-    case "semestral":
-      dataTermino = new Date(dataInicio.setMonth(dataInicio.getMonth() + 6));
-      break;
-    case "anual":
-      dataTermino = new Date(
-        dataInicio.setFullYear(dataInicio.getFullYear() + 1)
-      );
-      break;
-    default:
-      return "Plano desconhecido";
-  }
-
-  return formatarData(dataTermino);
-};
-
 const DetalhesMembros = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -95,12 +69,28 @@ const DetalhesMembros = () => {
     }
   };
 
-  const handleExercicioChange = (
-    categoriaIndex,
-    exercicioIndex,
-    field,
-    value
-  ) => {
+  const handleRenovarAssinatura = async () => {
+    const tipoPlano = prompt("Digite o novo tipo de plano (mensal, trimestral, semestral):").toLowerCase();
+
+    if (!["mensal", "trimestral", "semestral"].includes(tipoPlano)) {
+      alert("Tipo de plano inválido.");
+      return;
+    }
+
+    try {
+      await axios.put(`http://localhost:4000/membros/renovar/${id}`, { tipo_plano: tipoPlano });
+      alert("Assinatura renovada com sucesso!");
+
+      // Atualizar os detalhes do membro após a renovação
+      const response = await axios.get(`http://localhost:4000/membros/${id}`);
+      setMembro(response.data);
+    } catch (error) {
+      console.error("Erro ao renovar assinatura:", error);
+      alert("Erro ao renovar assinatura. Tente novamente.");
+    }
+  };
+
+  const handleExercicioChange = (categoriaIndex, exercicioIndex, field, value) => {
     const novasCategorias = [...membro.plano_treino.categorias];
     novasCategorias[categoriaIndex].exercicios[exercicioIndex] = {
       ...novasCategorias[categoriaIndex].exercicios[exercicioIndex],
@@ -190,11 +180,6 @@ const DetalhesMembros = () => {
   };
 
   if (!membro) return <div>Carregando...</div>;
-
-  const dataTermino = calcularDataTermino(
-    membro.data_registro,
-    membro.tipo_plano
-  );
 
   return (
     <div>
@@ -447,7 +432,10 @@ const DetalhesMembros = () => {
           <p>Restrições: {membro.restricoes}</p>
           <p>Tipo de Plano: {membro.tipo_plano}</p>
           <p>Data de Registro: {formatarData(membro.data_registro)}</p>
-          <p>Data de Término do Plano: {dataTermino}</p>
+          <p>
+            Data de Término do Plano: {formatarData(membro.data_final)}{" "}
+            <button onClick={handleRenovarAssinatura}>Renovar Assinatura</button>
+          </p>
           <p>
             Objetivo do Plano de Treino:{" "}
             {membro.plano_treino?.objetivo || "Nenhum objetivo definido"}
