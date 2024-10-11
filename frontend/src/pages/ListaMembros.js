@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
 const formatarData = (data) => {
   if (!data) return "Data inválida";
   const dataObj = new Date(data);
@@ -14,6 +14,8 @@ const formatarData = (data) => {
 };
 
 const ListaMembros = () => {
+  const navigate = useNavigate();
+
   const [membros, setMembros] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [novoMembro, setNovoMembro] = useState({
@@ -106,7 +108,6 @@ const ListaMembros = () => {
           value={novoMembro.nome_completo}
           onChange={handleNovoMembroChange}
         />
-
         <label>CPF:</label>
         <input
           type="text"
@@ -114,7 +115,6 @@ const ListaMembros = () => {
           value={novoMembro.cpf}
           onChange={handleNovoMembroChange}
         />
-
         <label>Data de Nascimento:</label>
         <input
           type="date"
@@ -122,7 +122,6 @@ const ListaMembros = () => {
           value={novoMembro.data_nascimento}
           onChange={handleNovoMembroChange}
         />
-
         <label>Restrições:</label>
         <input
           type="text"
@@ -130,7 +129,6 @@ const ListaMembros = () => {
           value={novoMembro.restricoes}
           onChange={handleNovoMembroChange}
         />
-
         <label>Tipo de Plano:</label>
         <select
           name="tipo_plano"
@@ -141,8 +139,9 @@ const ListaMembros = () => {
           <option value="trimestral">Trimestral</option>
           <option value="semestral">Semestral</option>
         </select>
-
         <button onClick={handleAdicionarMembro}>Adicionar Membro</button>
+
+        <button onClick={() => navigate(-1)}>Voltar</button>
       </div>
 
       <div>
