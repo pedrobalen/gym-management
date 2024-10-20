@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import EdicaoMembro from "./EdicaoMembro";
+import "./DetalhesMembros.css";
 
 const formatarData = (data) => {
   const dataObj = new Date(data);
@@ -69,48 +70,76 @@ const DetalhesMembros = () => {
   if (!membro) return <div>Carregando...</div>;
 
   return (
-    <div>
-      <h1>Detalhes de {membro.nome_completo}</h1>
+    <div id="detalhes-membros-container" className="detalhes-membros-container">
+      <h1 id="titulo-detalhes-membro" className="titulo">
+        Detalhes de {membro.nome_completo}
+      </h1>
 
       {editando ? (
-        <EdicaoMembro membro={membro} setMembro={setMembro} />
+        <div id="edicao-membro-container" className="edicao-membro-container">
+          <EdicaoMembro membro={membro} setMembro={setMembro} />
+        </div>
       ) : (
-        <div>
-          <p>Nome Completo: {membro.nome_completo}</p>
-          <p>CPF: {membro.cpf}</p>
-          <p>Data de Nascimento: {formatarData(membro.data_nascimento)}</p>
-          <p>Restrições: {membro.restricoes}</p>
-          <p>Tipo de Plano: {membro.tipo_plano}</p>
-          <p>
-            Data de Término do Plano: {formatarData(membro.data_final)}{" "}
-            <button onClick={handleRenovarAssinatura}>
+        <div id="detalhes-membro-info" className="detalhes-membro-info">
+          <p id="nome-completo" className="info-item">
+            Nome Completo: <span>{membro.nome_completo}</span>
+          </p>
+          <p id="cpf" className="info-item">
+            CPF: <span>{membro.cpf}</span>
+          </p>
+          <p id="data-nascimento" className="info-item">
+            Data de Nascimento: <span>{formatarData(membro.data_nascimento)}</span>
+          </p>
+          <p id="restricoes" className="info-item">
+            Restrições: <span>{membro.restricoes}</span>
+          </p>
+          <p id="tipo-plano" className="info-item">
+            Tipo de Plano: <span>{membro.tipo_plano}</span>
+          </p>
+          <p id="data-termino-plano" className="info-item">
+            Data de Término do Plano: <span>{formatarData(membro.data_final)}</span>{" "}
+            <button
+              id="botao-renovar-assinatura"
+              className="botao-renovar"
+              onClick={handleRenovarAssinatura}
+            >
               Renovar Assinatura
             </button>
           </p>
 
-          <h3>Categorias de Treino:</h3>
-          <ul>
+          <h3 id="titulo-categorias-treino" className="subtitulo">
+            Categorias de Treino:
+          </h3>
+          <ul id="lista-categorias-treino" className="lista-categorias">
             {membro.plano_treino?.categorias?.map(
               (categoria, categoriaIndex) => (
-                <li key={categoriaIndex}>
-                  <h4>{categoria.nome_categoria}</h4>
-                  <ul>
+                <li
+                  key={categoriaIndex}
+                  id={`categoria-${categoriaIndex}`}
+                  className="categoria-item"
+                >
+                  <h4 className="nome-categoria">{categoria.nome_categoria}</h4>
+                  <ul className="lista-exercicios">
                     {categoria.exercicios.map((exercicio, exercicioIndex) => (
-                      <li key={exercicioIndex}>
-                        <p>
+                      <li
+                        key={exercicioIndex}
+                        id={`exercicio-${categoriaIndex}-${exercicioIndex}`}
+                        className="exercicio-item"
+                      >
+                        <p className="exercicio-info">
                           <strong>Nome:</strong> {exercicio.nome_exercicio}
                         </p>
-                        <p>
+                        <p className="exercicio-info">
                           <strong>Séries:</strong> {exercicio.series}
                         </p>
-                        <p>
+                        <p className="exercicio-info">
                           <strong>Repetições:</strong> {exercicio.repeticoes}
                         </p>
-                        <p>
+                        <p className="exercicio-info">
                           <strong>Descanso (segundos):</strong>{" "}
                           {exercicio.descanso_segundos}
                         </p>
-                        <p>
+                        <p className="exercicio-info">
                           <strong>Observações:</strong> {exercicio.observacoes}
                         </p>
                       </li>
@@ -121,8 +150,20 @@ const DetalhesMembros = () => {
             )}
           </ul>
 
-          <button onClick={() => setEditando(true)}>Editar</button>
-          <button onClick={handleVoltar}>Voltar</button>
+          <button
+            id="botao-editar"
+            className="botao-editar"
+            onClick={() => setEditando(true)}
+          >
+            Editar
+          </button>
+          <button
+            id="botao-voltar"
+            className="botao-voltar"
+            onClick={handleVoltar}
+          >
+            Voltar
+          </button>
         </div>
       )}
     </div>

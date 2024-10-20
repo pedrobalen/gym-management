@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "./ListaMembros.css";
+
 const formatarData = (data) => {
   if (!data) return "Data inválida";
   const dataObj = new Date(data);
@@ -96,64 +98,85 @@ const ListaMembros = () => {
   );
 
   return (
-    <div>
-      <h1>Lista de Membros</h1>
+    <div id="lista-membros-container">
+      <h1 className="titulo">Lista de Membros</h1>
 
-      <h2>Adicionar Novo Membro</h2>
-      <div>
-        <label>Nome Completo:</label>
+      <h2 className="subtitulo">Adicionar Novo Membro</h2>
+      <div id="adicionar-membro-form">
+        <label htmlFor="nome_completo">Nome Completo:</label>
         <input
+          id="nome_completo"
           type="text"
           name="nome_completo"
           value={novoMembro.nome_completo}
           onChange={handleNovoMembroChange}
+          className="input-form"
         />
-        <label>CPF:</label>
+
+        <label htmlFor="cpf">CPF:</label>
         <input
+          id="cpf"
           type="text"
           name="cpf"
           value={novoMembro.cpf}
           onChange={handleNovoMembroChange}
+          className="input-form"
         />
-        <label>Data de Nascimento:</label>
+
+        <label htmlFor="data_nascimento">Data de Nascimento:</label>
         <input
+          id="data_nascimento"
           type="date"
           name="data_nascimento"
           value={novoMembro.data_nascimento}
           onChange={handleNovoMembroChange}
+          className="input-form"
         />
-        <label>Restrições:</label>
+
+        <label htmlFor="restricoes">Restrições:</label>
         <input
+          id="restricoes"
           type="text"
           name="restricoes"
           value={novoMembro.restricoes}
           onChange={handleNovoMembroChange}
+          className="input-form"
         />
-        <label>Tipo de Plano:</label>
+
+        <label htmlFor="tipo_plano">Tipo de Plano:</label>
         <select
+          id="tipo_plano"
           name="tipo_plano"
           value={novoMembro.tipo_plano}
           onChange={handleNovoMembroChange}
+          className="select-form"
         >
           <option value="mensal">Mensal</option>
           <option value="trimestral">Trimestral</option>
           <option value="semestral">Semestral</option>
         </select>
-        <button onClick={handleAdicionarMembro}>Adicionar Membro</button>
 
-        <button onClick={() => navigate(-1)}>Voltar</button>
+        <button id="botao-adicionar-membro" onClick={handleAdicionarMembro} className="button">
+          Adicionar Membro
+        </button>
+
+        <button id="botao-voltar" onClick={() => navigate(-1)} className="button button-secondary">
+          Voltar
+        </button>
       </div>
 
-      <div>
+      <div id="filtro-container">
         <input
+          id="filtro"
           type="text"
           placeholder="Buscar por nome ou CPF"
           value={filtro}
           onChange={handleFiltroChange}
+          className="input-filtro"
         />
       </div>
 
-      <table>
+      <table id="tabela-membros" className="tabela-membros">
         <thead>
           <tr>
             <th>Nome Completo</th>
@@ -170,7 +193,7 @@ const ListaMembros = () => {
             membrosFiltrados.map((membro) => (
               <tr key={membro.id}>
                 <td>
-                  <Link to={`/membros/${membro.id}`}>
+                  <Link to={`/membros/${membro.id}`} className="link-membro">
                     {membro.nome_completo}
                   </Link>
                 </td>

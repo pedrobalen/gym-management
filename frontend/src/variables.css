@@ -1,0 +1,14 @@
+:root {
+  --color-primary: #4a90e2;
+  --color-secondary: #2c3e50;
+  --color-light-gray: #f2f2f2;
+  --color-gray: #bdc3c7;
+  --color-white: #ffffff;
+  --color-success: #27ae60;
+  --color-danger: #e74c3c;
+
+  --font-family: "Roboto", sans-serif;
+
+  --border-radius: 4px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./EdicaoMembro.css";
 
 const EdicaoMembro = ({ membro, setMembro }) => {
+  const navigate = useNavigate();
   const [novaCategoria, setNovaCategoria] = useState("");
   const [novoExercicio, setNovoExercicio] = useState({
     nome_exercicio: "",
@@ -17,7 +20,6 @@ const EdicaoMembro = ({ membro, setMembro }) => {
     setMembro({ ...membro, [name]: value });
   };
 
-  // Função que atualiza o membro no banco de dados
   const atualizarMembroNoBanco = async (membroAtualizado) => {
     try {
       await axios.put(
@@ -30,7 +32,6 @@ const EdicaoMembro = ({ membro, setMembro }) => {
     }
   };
 
-  // Função que salva os dados básicos
   const salvarDadosBasicos = async () => {
     try {
       await axios.put(`http://localhost:4000/membros/${membro.id}`, membro);
@@ -58,7 +59,7 @@ const EdicaoMembro = ({ membro, setMembro }) => {
     };
 
     setMembro(membroAtualizado);
-    atualizarMembroNoBanco(membroAtualizado); // Atualiza o membro automaticamente no banco
+    atualizarMembroNoBanco(membroAtualizado);
   };
 
   const handleAdicionarExercicio = () => {
@@ -131,65 +132,98 @@ const EdicaoMembro = ({ membro, setMembro }) => {
   };
 
   return (
-    <div>
-      <label>Nome Completo:</label>
-      <input
-        type="text"
-        name="nome_completo"
-        value={membro.nome_completo}
-        onChange={handleInputChange}
-      />
+    <div id="edicao-membro-container" className="edicao-membro-container">
+      <h1 className="titulo-edicao">Edição de Membro</h1>
 
-      <label>CPF:</label>
-      <input
-        type="text"
-        name="cpf"
-        value={membro.cpf}
-        onChange={handleInputChange}
-      />
+      <div className="dados-basicos">
+        <label htmlFor="nome_completo">Nome Completo:</label>
+        <input
+          type="text"
+          id="nome_completo"
+          className="input-nome-completo"
+          name="nome_completo"
+          value={membro.nome_completo}
+          onChange={handleInputChange}
+        />
 
-      <label>Data de Nascimento:</label>
-      <input
-        type="date"
-        name="data_nascimento"
-        value={new Date(membro.data_nascimento).toISOString().slice(0, 10)}
-        onChange={handleInputChange}
-      />
+        <label htmlFor="cpf">CPF:</label>
+        <input
+          type="text"
+          id="cpf"
+          className="input-cpf"
+          name="cpf"
+          value={membro.cpf}
+          onChange={handleInputChange}
+        />
 
-      <label>Restrições:</label>
-      <input
-        type="text"
-        name="restricoes"
-        value={membro.restricoes}
-        onChange={handleInputChange}
-      />
+        <label htmlFor="data_nascimento">Data de Nascimento:</label>
+        <input
+          type="date"
+          id="data_nascimento"
+          className="input-data-nascimento"
+          name="data_nascimento"
+          value={new Date(membro.data_nascimento).toISOString().slice(0, 10)}
+          onChange={handleInputChange}
+        />
 
-      <label>Tipo de Plano:</label>
-      <select
-        name="tipo_plano"
-        value={membro.tipo_plano}
-        onChange={handleInputChange}
-      >
-        <option value="mensal">Mensal</option>
-        <option value="trimestral">Trimestral</option>
-        <option value="semestral">Semestral</option>
-      </select>
+        <label htmlFor="restricoes">Restrições:</label>
+        <input
+          type="text"
+          id="restricoes"
+          className="input-restricoes"
+          name="restricoes"
+          value={membro.restricoes}
+          onChange={handleInputChange}
+        />
 
-      <button onClick={salvarDadosBasicos}>Salvar</button>
+        <label htmlFor="tipo_plano">Tipo de Plano:</label>
+        <select
+          id="tipo_plano"
+          className="select-tipo-plano"
+          name="tipo_plano"
+          value={membro.tipo_plano}
+          onChange={handleInputChange}
+        >
+          <option value="mensal">Mensal</option>
+          <option value="trimestral">Trimestral</option>
+          <option value="semestral">Semestral</option>
+        </select>
 
-      <h3>Categorias de Treino:</h3>
+        <button
+          id="botao-salvar-basicos"
+          className="botao-salvar"
+          onClick={salvarDadosBasicos}
+        >
+          Salvar
+        </button>
+      </div>
+
+      <h3 className="titulo-categorias">Categorias de Treino:</h3>
       {membro.plano_treino?.categorias?.map((categoria, categoriaIndex) => (
-        <div key={categoriaIndex}>
-          <h4>{categoria.nome_categoria}</h4>
-          <button onClick={() => handleExcluirCategoria(categoriaIndex)}>
+        <div
+          key={categoriaIndex}
+          id={`categoria-${categoriaIndex}`}
+          className="categoria-container"
+        >
+          <h4 className="nome-categoria">{categoria.nome_categoria}</h4>
+          <button
+            id={`botao-excluir-categoria-${categoriaIndex}`}
+            className="botao-excluir"
+            onClick={() => handleExcluirCategoria(categoriaIndex)}
+          >
             Excluir Categoria
           </button>
 
           {categoria.exercicios.map((exercicio, exercicioIndex) => (
-            <div key={exercicioIndex}>
+            <div
+              key={exercicioIndex}
+              id={`exercicio-${categoriaIndex}-${exercicioIndex}`}
+              className="exercicio-container"
+            >
               <label>Nome do Exercício:</label>
               <input
                 type="text"
+                className="input-nome-exercicio"
                 value={exercicio.nome_exercicio}
                 onChange={(e) =>
                   handleExercicioChange(
@@ -204,6 +238,7 @@ const EdicaoMembro = ({ membro, setMembro }) => {
               <label>Séries:</label>
               <input
                 type="number"
+                className="input-series"
                 value={exercicio.series}
                 onChange={(e) =>
                   handleExercicioChange(
@@ -218,6 +253,7 @@ const EdicaoMembro = ({ membro, setMembro }) => {
               <label>Repetições:</label>
               <input
                 type="number"
+                className="input-repeticoes"
                 value={exercicio.repeticoes}
                 onChange={(e) =>
                   handleExercicioChange(
@@ -232,6 +268,7 @@ const EdicaoMembro = ({ membro, setMembro }) => {
               <label>Descanso (segundos):</label>
               <input
                 type="number"
+                className="input-descanso"
                 value={exercicio.descanso_segundos}
                 onChange={(e) =>
                   handleExercicioChange(
@@ -246,6 +283,7 @@ const EdicaoMembro = ({ membro, setMembro }) => {
               <label>Observações:</label>
               <input
                 type="text"
+                className="input-observacoes"
                 value={exercicio.observacoes}
                 onChange={(e) =>
                   handleExercicioChange(
@@ -258,6 +296,8 @@ const EdicaoMembro = ({ membro, setMembro }) => {
               />
 
               <button
+                id={`botao-excluir-exercicio-${categoriaIndex}-${exercicioIndex}`}
+                className="botao-excluir"
                 onClick={() =>
                   handleExcluirExercicio(categoriaIndex, exercicioIndex)
                 }
@@ -269,17 +309,29 @@ const EdicaoMembro = ({ membro, setMembro }) => {
         </div>
       ))}
 
-      <h3>Adicionar Nova Categoria:</h3>
+      <h3 className="titulo-adicionar-categoria">Adicionar Nova Categoria:</h3>
       <input
         type="text"
+        id="nova-categoria"
+        className="input-nova-categoria"
         value={novaCategoria}
         placeholder="Nome da nova categoria"
         onChange={(e) => setNovaCategoria(e.target.value)}
       />
-      <button onClick={handleAdicionarCategoria}>Adicionar Categoria</button>
+      <button
+        id="botao-adicionar-categoria"
+        className="botao-adicionar"
+        onClick={handleAdicionarCategoria}
+      >
+        Adicionar Categoria
+      </button>
 
-      <h3>Adicionar Novo Exercício à Categoria:</h3>
+      <h3 className="titulo-adicionar-exercicio">
+        Adicionar Novo Exercício à Categoria:
+      </h3>
       <select
+        id="select-categoria"
+        className="select-categoria"
         value={categoriaSelecionada}
         onChange={(e) => setCategoriaSelecionada(e.target.value)}
       >
@@ -294,6 +346,8 @@ const EdicaoMembro = ({ membro, setMembro }) => {
       <label>Nome do Exercício:</label>
       <input
         type="text"
+        id="nome-exercicio"
+        className="input-nome-exercicio"
         value={novoExercicio.nome_exercicio}
         onChange={(e) =>
           setNovoExercicio({ ...novoExercicio, nome_exercicio: e.target.value })
@@ -303,6 +357,8 @@ const EdicaoMembro = ({ membro, setMembro }) => {
       <label>Séries:</label>
       <input
         type="number"
+        id="series"
+        className="input-series"
         value={novoExercicio.series}
         onChange={(e) =>
           setNovoExercicio({ ...novoExercicio, series: e.target.value })
@@ -312,6 +368,8 @@ const EdicaoMembro = ({ membro, setMembro }) => {
       <label>Repetições:</label>
       <input
         type="number"
+        id="repeticoes"
+        className="input-repeticoes"
         value={novoExercicio.repeticoes}
         onChange={(e) =>
           setNovoExercicio({ ...novoExercicio, repeticoes: e.target.value })
@@ -321,6 +379,8 @@ const EdicaoMembro = ({ membro, setMembro }) => {
       <label>Descanso (segundos):</label>
       <input
         type="number"
+        id="descanso-segundos"
+        className="input-descanso"
         value={novoExercicio.descanso_segundos}
         onChange={(e) =>
           setNovoExercicio({
@@ -333,13 +393,24 @@ const EdicaoMembro = ({ membro, setMembro }) => {
       <label>Observações:</label>
       <input
         type="text"
+        id="observacoes"
+        className="input-observacoes"
         value={novoExercicio.observacoes}
         onChange={(e) =>
           setNovoExercicio({ ...novoExercicio, observacoes: e.target.value })
         }
       />
 
-      <button onClick={handleAdicionarExercicio}>Adicionar Exercício</button>
+      <button
+        id="botao-adicionar-exercicio"
+        className="botao-adicionar"
+        onClick={handleAdicionarExercicio}
+      >
+        Adicionar Exercício
+      </button>
+      <button onClick={() => navigate(-1)} className="botao-voltar">
+        Voltar
+      </button>
     </div>
   );
 };

@@ -1,0 +1,63 @@
+#edicao-membro-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+#edicao-membro-container label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#edicao-membro-container input,
+#edicao-membro-container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+#edicao-membro-container button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 15px;
+}
+
+#edicao-membro-container button:hover {
+  background-color: #0056b3;
+}
+
+#edicao-membro-container .categoria-container,
+#edicao-membro-container .exercicio-container {
+  padding: 10px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+#edicao-membro-container h3 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#edicao-membro-container .botao-voltar {
+  background-color: #6c757d;
+}
+
+#edicao-membro-container .botao-voltar:hover {
+  background-color: #5a6268;
+}
